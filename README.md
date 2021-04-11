@@ -50,3 +50,7 @@ sun: [0, 360, 5]
 cam: [0, 360, 5]
 follow: 0
 ```
+
+## references
+https://mitsuba2.readthedocs.io/en/latest/src/python_interface/bsdf_eval.html \
+https://github.com/mitsuba-renderer/mitsuba2/blob/master/docs/examples/05_bsdf_eval/bsdf_eval.py
