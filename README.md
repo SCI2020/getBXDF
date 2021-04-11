@@ -2,8 +2,8 @@
 get BXDF in mitsuba2
 
 ## environment
-[build mitsuba with variant "packet_rgb"](https://mitsuba2.readthedocs.io/en/latest/) \
-add to python import search path
+[build mitsuba2 with variant "packet_rgb"](https://mitsuba2.readthedocs.io/en/latest/) \
+add mitsuba and enoki to python import search path
 ```
 export PYTHONPATH="<..mitsuba repository..>/build/dist/python:$PYTHONPATH"
 ```
@@ -14,16 +14,25 @@ export PYTHONPATH="<..mitsuba repository..>/build/dist/python:$PYTHONPATH"
   overwrite by following args
 -material STRING
   "type roughconductor alpha 0.01"
--sun START END STEP
+-i START END STEP
   [START, END), including START, excluding END
--cam START END STEP
-  [START, END), required if -follow 0
--follow INT
-   0: meshgrid(sun, cam)
-   1: cam =  sun,       eg. (sun, cam) = (30,  30)
-  -1: cam = -sun,       eg. (sun, cam) = (30, 330)
-   2: cam + sun = 180,  eg. (sun, cam) = (30, 150)
-  -2: cam - sun = 180,  eg. (sum, cam) = (30, 210)
+-s START END STEP
+  [START, END), required if -mode 0
+-mode INT
+   0: meshgrid(i, s)
+   1: s =  i,       eg. (i, s) = (30,  30)
+  -1: s = -i,       eg. (i, s) = (30, 330)
+   2: s + i = 180,  eg. (i, s) = (30, 150)
+  -2: s - i = 180,  eg. (i, s) = (30, 210)
+   3: spherical coordinate
+-ti START END STEP
+  polar angle of the incident, required if -mode 3
+-pi START END STEP
+  azimuthal angle of the incident, required if -mode 3
+-ts START END STEP
+  polar angle of the scatter, required if -mode 3
+-ps START END STEP
+  azimuthal angle of the scatter, required if -mode 3
 -o FILE
   output filename, "./out.npy" by default
 ```
@@ -33,29 +42,42 @@ export PYTHONPATH="<..mitsuba repository..>/build/dist/python:$PYTHONPATH"
 material:
   - type: roughconductor
   - alpha: 0.01
-sun: [START, END, STEP]
-cam: [START, END, STEP]
-follow: INT
-out: FILE
+i: [START, END, STEP]
+s: [START, END, STEP]
+mode: INT
+ti: [START, END, STEP]
+pi: [START, END, STEP]
+ts: [START, END, STEP]
+ps: [START, END, STEP]
+o: FILE
 ```
 
-## BRDF
+## BRDF-coincident
 ```
-sun: [0, 181, 5]
-follow: 1
-```
-
-## BTDF
-```
-sun: [0, 181, 5]
-follow: -2
+i: [0, 181, 5]
+mode: 1
 ```
 
-## BSDF
+## BTDF-specular
 ```
-sun: [0, 360, 5]
-cam: [0, 360, 5]
-follow: 0
+i: [0, 181, 5]
+mode: -2
+```
+
+## BSDF-circle
+```
+i: [0, 360, 5]
+s: [0, 360, 5]
+mode: 0
+```
+
+## BSDF-spherical
+```
+mode: 3
+ti: [60, 121, 5]
+pi: [45, 136, 5]
+ts: [60, 121, 5]
+ps: [45, 136, 5]
 ```
 
 ## references
