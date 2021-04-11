@@ -20,10 +20,10 @@ export PYTHONPATH="<..mitsuba repository..>/build/dist/python:$PYTHONPATH"
   [START, END), required if -mode 0
 -mode INT
    0: meshgrid(i, s)
-   1: s =  i,       eg. (i, s) = (30,  30)
-  -1: s = -i,       eg. (i, s) = (30, 330)
-   2: s + i = 180,  eg. (i, s) = (30, 150)
-  -2: s - i = 180,  eg. (i, s) = (30, 210)
+   1: s =  i,       e.g. (i, s) = (30,  30)
+  -1: s = -i,       e.g. (i, s) = (30, 330)
+   2: s + i = 180,  e.g. (i, s) = (30, 150)
+  -2: s - i = 180,  e.g. (i, s) = (30, 210)
    3: spherical coordinate
 -ti START END STEP
   polar angle of the incident, required if -mode 3
