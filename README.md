@@ -1,6 +1,13 @@
 # getBXDF
 get BXDF in mitsuba2
 
+## environment
+[build mitsuba with variant "packet_rgb"](https://mitsuba2.readthedocs.io/en/latest/) \
+add to python import search path
+```
+export PYTHONPATH="<..mitsuba repository..>/build/dist/python:$PYTHONPATH"
+```
+
 ## arguments
 ```
 -config PATH
