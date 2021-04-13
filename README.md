@@ -14,10 +14,10 @@ export PYTHONPATH="<..mitsuba repository..>/build/dist/python:$PYTHONPATH"
   overwrite by following args
 -material STRING
   "type roughconductor alpha 0.01"
--i START END STEP
-  [START, END), including START, excluding END
--s START END STEP
-  [START, END), required if -mode 0
+-i START END STEPS
+  [START, END], including START and END
+-s START END STEPS
+  [START, END], required if -mode 0
 -mode INT
    0: meshgrid(i, s)
    1: s =  i,       e.g. (i, s) = (30,  30)
@@ -25,13 +25,13 @@ export PYTHONPATH="<..mitsuba repository..>/build/dist/python:$PYTHONPATH"
    2: s + i = 180,  e.g. (i, s) = (30, 150)
   -2: s - i = 180,  e.g. (i, s) = (30, 210)
    3: spherical coordinate
--ti START END STEP
+-ti START END STEPS
   polar angle of the incident, required if -mode 3
--pi START END STEP
+-pi START END STEPS
   azimuthal angle of the incident, required if -mode 3
--ts START END STEP
+-ts START END STEPS
   polar angle of the scatter, required if -mode 3
--ps START END STEP
+-ps START END STEPS
   azimuthal angle of the scatter, required if -mode 3
 -o FILE
   output filename, "./out.npy" by default
@@ -42,42 +42,42 @@ export PYTHONPATH="<..mitsuba repository..>/build/dist/python:$PYTHONPATH"
 material:
   - type: roughconductor
   - alpha: 0.01
-i: [START, END, STEP]
-s: [START, END, STEP]
+i: [START, END, STEPS]
+s: [START, END, STEPS]
 mode: INT
-ti: [START, END, STEP]
-pi: [START, END, STEP]
-ts: [START, END, STEP]
-ps: [START, END, STEP]
+ti: [START, END, STEPS]
+pi: [START, END, STEPS]
+ts: [START, END, STEPS]
+ps: [START, END, STEPS]
 o: FILE
 ```
 
 ## BRDF-coincident
 ```
-i: [0, 181, 5]
+i: [0, 180, 100]
 mode: 1
 ```
 
 ## BTDF-specular
 ```
-i: [0, 181, 5]
+i: [0, 180, 100]
 mode: -2
 ```
 
 ## BSDF-circle
 ```
-i: [0, 360, 5]
-s: [0, 360, 5]
+i: [0, 360, 200]
+s: [0, 360, 200]
 mode: 0
 ```
 
 ## BSDF-spherical
 ```
 mode: 3
-ti: [60, 121, 5]
-pi: [45, 136, 5]
-ts: [60, 121, 5]
-ps: [45, 136, 5]
+ti: [60, 120, 50]
+pi: [45, 135, 50]
+ts: [60, 120, 50]
+ps: [45, 135, 50]
 ```
 
 ## references
