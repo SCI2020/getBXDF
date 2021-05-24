@@ -1,0 +1,1 @@
+export PYTHONPATH=~/src/mitsuba2/build/dist/python
