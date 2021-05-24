@@ -39,6 +39,12 @@ wo = sph_dir(theta_o, phi_o)
 # Evaluate the whole array (18000 directions) at once
 values = bsdf.eval(BSDFContext(), si, wo)
 
+if __name__ == '__main__':
+    # get args
+    # make data
+    # write data
+    # show data
+
 import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1 import make_axes_locatable
