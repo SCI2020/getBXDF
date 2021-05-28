@@ -13,7 +13,7 @@ export PYTHONPATH="<..mitsuba repository..>/build/dist/python:$PYTHONPATH"
 -config PATH
   overwrite by following args
 -material STRING
-  "type roughconductor alpha 0.01"
+  "<bsdf version='2.0.0' type='roughconductor'><float name="alpha" value="0.2"/><string name="distribution" value="ggx"/></bsdf>"
 -i START END STEPS
   [START, END], including START and END
 -s START END STEPS
