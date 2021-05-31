@@ -77,22 +77,40 @@ if __name__ == '__main__':
         formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument('-c','--config', dest='config', action='store',
                         help='overwrite by following args') # TODO
-    parser.add_argument('-mat','--material', dest='material', action='store',
+    parser.add_argument('-a','--material', dest='material', action='store',
                         help='<bsdf ...>...<bsdf/>') # TODO
     parser.add_argument('-i','--incident-angle', dest='i', action='store',
-                        help='Incident angle') # TODO
+                        help='[0 ±1 ±2] Incident angle') # TODO
     parser.add_argument('-s','--scattered-angle', dest='s', action='store',
-                        help='Scattered angle') # TODO
-    parser.add_argument('-m','--mode', dest='mode', action='store',
+                        help='[0] Scattered angle') # TODO
+    parser.add_argument('-d','--mode', dest='mode', action='store',
                         help=textwrap.dedent('''
-                            0  : meshgrid(i, s)
-                            1  : s =  i,       e.g. (i, s) = (30,  30)
-                            -1 : s = -i,       e.g. (i, s) = (30, 330)
-                            2  : s + i = 180,  e.g. (i, s) = (30, 150)
-                            -2 : s - i = 180,  e.g. (i, s) = (30, 210)
-                            3  : spherical coordinate''')) # TODO
+                            [ 0 ] meshgrid(i, s)
+                            [ 1 ] s =  i,       e.g. (i, s) = (30,  30)
+                            [-1 ] s = -i,       e.g. (i, s) = (30, 330)
+                            [ 2 ] s + i = 180,  e.g. (i, s) = (30, 150)
+                            [-2 ] s - i = 180,  e.g. (i, s) = (30, 210)
+                            [ 3 ] spherical coordinate''')) # TODO
+    parser.add_argument('-ti','--theta-incident', dest='ti', action='store',
+                        help='[3] Theta incident') # TODO
+    parser.add_argument('-pi','--phi-incident', dest='pi', action='store',
+                        help='[3] Phi incident') # TODO
+    parser.add_argument('-ts','--theta-scattered', dest='ts', action='store',
+                        help='[3] Theta scattered') # TODO
+    parser.add_argument('-ps','--phi-scattered', dest='ps', action='store',
+                        help='[3] Phi scattered') # TODO
+    parser.add_argument('-o','--output-file', dest='o', action='store',
+                        help='Output file') # TODO
+    parser.add_argument('-n','--output-npy', dest='npy', action='store_', # TODO
+                        help='Output format') # TODO
+    parser.add_argument('-m','--output-mat', dest='mat', action='store_', # TODO
+                        help='Output format') # TODO
+    parser.add_argument('-j','--output-mat', dest='jpg', action='store_', # TODO
+                        help='Output format') # TODO
+    parser.add_argument('-p','--output-mat', dest='png', action='store_', # TODO
+                        help='Output format') # TODO
     args = parser.parse_args()
-    print(args.config)
+    print(args.f)
     # make data
     values = get_bsdf()
     # show & write data
