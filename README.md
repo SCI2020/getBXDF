@@ -10,38 +10,41 @@ export PYTHONPATH="<..mitsuba repository..>/build/dist/python:$PYTHONPATH"
 
 ## arguments
 ```
--config PATH
-  overwrite by following args
--material STRING
-  "<bsdf version='2.0.0' type='roughconductor'><float name="alpha" value="0.2"/><string name="distribution" value="ggx"/></bsdf>"
--i START END STEPS
-  [START, END], including START and END
--s START END STEPS
-  [START, END], required if -mode 0
--mode INT
-   0: meshgrid(i, s)
-   1: s =  i,       e.g. (i, s) = (30,  30)
-  -1: s = -i,       e.g. (i, s) = (30, 330)
-   2: s + i = 180,  e.g. (i, s) = (30, 150)
-  -2: s - i = 180,  e.g. (i, s) = (30, 210)
-   3: spherical coordinate
--ti START END STEPS
-  polar angle of the incident, required if -mode 3
--pi START END STEPS
-  azimuthal angle of the incident, required if -mode 3
--ts START END STEPS
-  polar angle of the scatter, required if -mode 3
--ps START END STEPS
-  azimuthal angle of the scatter, required if -mode 3
--o FILE
-  output filename, "./out.npy" by default
+-h, --help            show this help message and exit
+-c CONFIG, --config CONFIG
+                      overwrite by following args
+-a MATERIAL, --material MATERIAL
+                      <bsdf ...>...<bsdf/>
+-i I I I, --incident-angle I I I
+                      [ 0 ±1 ±2 ] Incident angle
+-s S S S, --scattered-angle S S S
+                      [ 0 ] Scattered angle
+-d MODE, --mode MODE
+                      [ 0 ] meshgrid(i, s)
+                      [ 1 ] s =  i,       e.g. (i, s) = (30,  30)
+                      [-1 ] s = -i,       e.g. (i, s) = (30, 330)
+                      [ 2 ] s + i = 180,  e.g. (i, s) = (30, 150)
+                      [-2 ] s - i = 180,  e.g. (i, s) = (30, 210)
+                      [ 3 ] spherical coordinate
+-ti TI TI TI, --theta-incident TI TI TI
+                      [ 3 ] Theta incident
+-pi PI PI PI, --phi-incident PI PI PI
+                      [ 3 ] Phi incident
+-ts TS TS TS, --theta-scattered TS TS TS
+                      [ 3 ] Theta scattered
+-ps PS PS PS, --phi-scattered PS PS PS
+                      [ 3 ] Phi scattered
+-o O, --output O      Output filename
+-n, --npy             Output .npy file
+-m, --mat             Output .mat file
+-j, --jpg             Output .jpg file
+-p, --png             Output .png file
+-w, --show            Show plot
 ```
  
 ## config file
 ```
-material:
-  - type: roughconductor
-  - alpha: 0.01
+material: "<bsdf ...>...</bsdf>"
 i: [START, END, STEPS]
 s: [START, END, STEPS]
 mode: INT
@@ -50,6 +53,7 @@ pi: [START, END, STEPS]
 ts: [START, END, STEPS]
 ps: [START, END, STEPS]
 o: FILE
+f: "nmjpw"
 ```
 
 ## BRDF-coincident

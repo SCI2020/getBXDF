@@ -20,7 +20,7 @@ def sph_dir(theta, phi):
     sp, cp = ek.sincos(phi)
     return Vector3f(cp * st, sp * st, ct)
 
-def get_bsdf():
+def get_bsdf(args):
     # Load desired BSDF plugin
     bsdf = load_string("""<bsdf version='2.0.0' type='roughconductor'>
                             <float name="alpha" value="0.2"/>
@@ -45,7 +45,7 @@ def get_bsdf():
     values = bsdf.eval(BSDFContext(), si, wo)
     return values
 
-def plot_bsdf(values):
+def plot_bsdf(values, args):
     res = 300
     # Extract red channel of BRDF values and reshape into 2D grid
     values_r = np.array(values)[:, 0]
@@ -75,43 +75,60 @@ if __name__ == '__main__':
     # parse args
     parser = argparse.ArgumentParser(description='Get BXDF from mitsuba2.',
         formatter_class=argparse.RawTextHelpFormatter)
-    parser.add_argument('-c','--config', dest='config', action='store',
-                        help='overwrite by following args') # TODO
-    parser.add_argument('-a','--material', dest='material', action='store',
-                        help='<bsdf ...>...<bsdf/>') # TODO
-    parser.add_argument('-i','--incident-angle', dest='i', action='store',
-                        help='[0 ±1 ±2] Incident angle') # TODO
-    parser.add_argument('-s','--scattered-angle', dest='s', action='store',
-                        help='[0] Scattered angle') # TODO
-    parser.add_argument('-d','--mode', dest='mode', action='store',
+    parser.add_argument('-c','--config', dest='config',
+                        action='store', type=str, default=None,
+                        help='overwrite by following args')
+    parser.add_argument('-a','--material', dest='material',
+                        action='store', type=str,
+                        default="<bsdf version='2.0.0' type='roughconductor'><float name='alpha' value='0.2'/><string name='distribution' value='ggx'/></bsdf>",
+                        help='<bsdf ...>...<bsdf/>')
+    parser.add_argument('-i','--incident-angle', dest='i',
+                        action='store', nargs=3,
+                        default=[0.0, 360.0, 128],
+                        help='[ 0 ±1 ±2 ] Incident angle')
+    parser.add_argument('-s','--scattered-angle', dest='s',
+                        action='store', nargs=3,
+                        default=[0.0, 360.0, 128],
+                        help='[ 0 ] Scattered angle')
+    parser.add_argument('-d','--mode', dest='mode',
+                        action='store', type=int, default=0,
                         help=textwrap.dedent('''
                             [ 0 ] meshgrid(i, s)
                             [ 1 ] s =  i,       e.g. (i, s) = (30,  30)
                             [-1 ] s = -i,       e.g. (i, s) = (30, 330)
                             [ 2 ] s + i = 180,  e.g. (i, s) = (30, 150)
                             [-2 ] s - i = 180,  e.g. (i, s) = (30, 210)
-                            [ 3 ] spherical coordinate''')) # TODO
-    parser.add_argument('-ti','--theta-incident', dest='ti', action='store',
-                        help='[3] Theta incident') # TODO
-    parser.add_argument('-pi','--phi-incident', dest='pi', action='store',
-                        help='[3] Phi incident') # TODO
-    parser.add_argument('-ts','--theta-scattered', dest='ts', action='store',
-                        help='[3] Theta scattered') # TODO
-    parser.add_argument('-ps','--phi-scattered', dest='ps', action='store',
-                        help='[3] Phi scattered') # TODO
-    parser.add_argument('-o','--output-file', dest='o', action='store',
-                        help='Output file') # TODO
-    parser.add_argument('-n','--output-npy', dest='npy', action='store_', # TODO
-                        help='Output format') # TODO
-    parser.add_argument('-m','--output-mat', dest='mat', action='store_', # TODO
-                        help='Output format') # TODO
-    parser.add_argument('-j','--output-mat', dest='jpg', action='store_', # TODO
-                        help='Output format') # TODO
-    parser.add_argument('-p','--output-mat', dest='png', action='store_', # TODO
-                        help='Output format') # TODO
+                            [ 3 ] spherical coordinate'''))
+    parser.add_argument('-ti','--theta-incident', dest='ti',
+                        action='store', nargs=3,
+                        default=[0.0, 360.0, 128],
+                        help='[ 3 ] Theta incident')
+    parser.add_argument('-pi','--phi-incident', dest='pi',
+                        action='store', nargs=3,
+                        default=[0.0, 360.0, 128],
+                        help='[ 3 ] Phi incident')
+    parser.add_argument('-ts','--theta-scattered', dest='ts',
+                        action='store', nargs=3,
+                        default=[0.0, 360.0, 128],
+                        help='[ 3 ] Theta scattered')
+    parser.add_argument('-ps','--phi-scattered', dest='ps',
+                        action='store', nargs=3,
+                        default=[0.0, 360.0, 128],
+                        help='[ 3 ] Phi scattered')
+    parser.add_argument('-o','--output', dest='o', action='store',
+                        default='out', help='Output filename')
+    parser.add_argument('-n','--npy', dest='npy', action='store_true',
+                        default=False, help='Output .npy file')
+    parser.add_argument('-m','--mat', dest='mat', action='store_true',
+                        default=False, help='Output .mat file')
+    parser.add_argument('-j','--jpg', dest='jpg', action='store_true',
+                        default=False, help='Output .jpg file')
+    parser.add_argument('-p','--png', dest='png', action='store_true',
+                        default=False, help='Output .png file')
+    parser.add_argument('-w','--show', dest='show', action='store_true',
+                        default=False, help='Show plot')
     args = parser.parse_args()
-    print(args.f)
     # make data
-    values = get_bsdf()
+    values = get_bsdf(args)
     # show & write data
-    plot_bsdf(values)
+    plot_bsdf(values,args)
