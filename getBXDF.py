@@ -20,25 +20,18 @@ def sph_dir(theta, phi):
     sp, cp = ek.sincos(phi)
     return Vector3f(cp * st, sp * st, ct)
 
-def get_bsdf(args):
+def get_bsdf_s(args, theta_i, phi_i):
     # Load desired BSDF plugin
     bsdf = load_string(args.material)
 
     # Create a (dummy) surface interaction to use for the evaluation
-    #si = [[SurfaceInteraction3f()] * args.ti[2]] * args.pi[2] TODO
     si = SurfaceInteraction3f()
-    d2r = ek.pi / 180
 
     # Specify an incident direction with 45 degrees elevation
-    '''
-    theta_i, phi_i = ek.meshgrid(
-        ek.linspace(Float, d2r*args.ti[0], d2r*args.ti[1], args.ti[2]),
-        ek.linspace(Float, d2r*args.pi[0], d2r*args.pi[1], args.pi[2])
-    )
-    si.wi = sph_dir(theta_i, phi_i)''' # TODO
-    si.wi = sph_dir(0, 0)
+    si.wi = sph_dir(theta_i, phi_i)
 
     # Create grid in spherical coordinates and map it onto the sphere
+    d2r = ek.pi / 180
     theta_s, phi_s = ek.meshgrid(
         ek.linspace(Float, d2r*args.ts[0], d2r*args.ts[1], args.ts[2]),
         ek.linspace(Float, d2r*args.ps[0], d2r*args.ps[1], args.ps[2])
@@ -47,9 +40,16 @@ def get_bsdf(args):
 
     # Evaluate the whole array (18000 directions) at once
     values = bsdf.eval(BSDFContext(), si, ws)
-    return values
+    values_r = np.array(values)[:, 0]
+    values_r = values_r.reshape(args.ts[2], args.ps[2]).T
+    return values_r
 
-def plot_bsdf(values, args):
+def get_bsdf_i(args): # parallel get_bsdf_s
+    ret = np.zeros((args.ti[2], args.pi[2], args.ts[2], args.ps[2]),
+                    dtype=float)
+    pass
+
+def plot_bsdf(args, values):
     res = 128
     # Extract red channel of BRDF values and reshape into 2D grid
     values_r = np.array(values)[:, 0]
@@ -133,7 +133,7 @@ if __name__ == '__main__':
                         default=False, help='Show plot')
     args = parser.parse_args()
     # make data
-    values = get_bsdf(args)
+    values = get_bsdf_s(args, 0, 0)
     print(np.array(values).shape)
     # show & write data
-    plot_bsdf(values,args)
+    #plot_bsdf(values,args)
