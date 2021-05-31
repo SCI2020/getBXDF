@@ -1,28 +1,35 @@
 # getBXDF
+
 get BXDF in mitsuba2
 
 ## environment
-<<<<<<< HEAD
+
 [build mitsuba2 with variant "packet_rgb"](https://mitsuba2.readthedocs.io/en/latest/)
-=======
-[build mitsuba2 with variant "packet_rgb"](https://mitsuba2.readthedocs.io/en/latest/) \
->>>>>>> 74eae1e1fa10784989b4b27fee5b46a48d8f0d59
+
 ### Linux
+
 add mitsuba and enoki to python import search path
+
 ```
 export PYTHONPATH="<..mitsuba repository..>/build/dist/python:$PYTHONPATH"
 ```
+
 or edit and run
+
 ```
 source setpypath.sh
 ```
+
 ### Windows
+
 add Environment Variable
+
 |Variable|Value|
 |:-:|:-:|
 |PYTHONPATH|C:\Users\YOUR-USERNAME\source\repos\mitsuba2\dist\python|
 
 ## arguments
+
 ```
 -h, --help            show this help message and exit
 -c CONFIG, --config CONFIG
@@ -57,6 +64,7 @@ add Environment Variable
 ```
  
 ## config file
+
 ```
 material: "<bsdf ...>...</bsdf>"
 i: [START, END, STEPS]
@@ -71,18 +79,21 @@ f: "nmjpw"
 ```
 
 ## BRDF-coincident
+
 ```
 i: [0, 180, 100]
 mode: 1
 ```
 
 ## BTDF-specular
+
 ```
 i: [0, 180, 100]
 mode: -2
 ```
 
 ## BSDF-circle
+
 ```
 i: [0, 360, 200]
 s: [0, 360, 200]
@@ -90,6 +101,7 @@ mode: 0
 ```
 
 ## BSDF-spherical
+
 ```
 mode: 3
 ti: [60, 120, 50]
@@ -99,5 +111,6 @@ ps: [45, 135, 50]
 ```
 
 ## references
+
 https://mitsuba2.readthedocs.io/en/latest/src/python_interface/bsdf_eval.html \
 https://github.com/mitsuba-renderer/mitsuba2/blob/master/docs/examples/05_bsdf_eval/bsdf_eval.py
