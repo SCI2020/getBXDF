@@ -9,7 +9,7 @@ from mitsuba.core.xml import load_string
 from mitsuba.render import SurfaceInteraction3f, BSDFContext
 
 import numpy as np
-import argparse
+import argparse, textwrap
 
 import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1 import make_axes_locatable
@@ -73,9 +73,24 @@ def plot_bsdf(values):
 
 if __name__ == '__main__':
     # parse args
-    parser = argparse.ArgumentParser(description='Get BXDF from mitsuba2.')
+    parser = argparse.ArgumentParser(description='Get BXDF from mitsuba2.',
+        formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument('-c','--config', dest='config', action='store',
-                        help='overwrite by following args')
+                        help='overwrite by following args') # TODO
+    parser.add_argument('-mat','--material', dest='material', action='store',
+                        help='<bsdf ...>...<bsdf/>') # TODO
+    parser.add_argument('-i','--incident-angle', dest='i', action='store',
+                        help='Incident angle') # TODO
+    parser.add_argument('-s','--scattered-angle', dest='s', action='store',
+                        help='Scattered angle') # TODO
+    parser.add_argument('-m','--mode', dest='mode', action='store',
+                        help=textwrap.dedent('''
+                            0  : meshgrid(i, s)
+                            1  : s =  i,       e.g. (i, s) = (30,  30)
+                            -1 : s = -i,       e.g. (i, s) = (30, 330)
+                            2  : s + i = 180,  e.g. (i, s) = (30, 150)
+                            -2 : s - i = 180,  e.g. (i, s) = (30, 210)
+                            3  : spherical coordinate''')) # TODO
     args = parser.parse_args()
     print(args.config)
     # make data
