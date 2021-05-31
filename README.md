@@ -5,6 +5,8 @@ get BXDF in mitsuba2
 ## environment
 
 [build mitsuba2 with variant "packet_rgb"](https://mitsuba2.readthedocs.io/en/latest/)
+or
+[download binary from mitsuba2-builds Releases](https://github.com/SCI2020/mitsuba2-builds/releases)
 
 ### Linux
 
