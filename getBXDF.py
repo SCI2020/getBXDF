@@ -22,53 +22,57 @@ def sph_dir(theta, phi):
 
 def get_bsdf(args):
     # Load desired BSDF plugin
-    bsdf = load_string("""<bsdf version='2.0.0' type='roughconductor'>
-                            <float name="alpha" value="0.2"/>
-                            <string name="distribution" value="ggx"/>
-                        </bsdf>""")
+    bsdf = load_string(args.material)
 
     # Create a (dummy) surface interaction to use for the evaluation
+    #si = [[SurfaceInteraction3f()] * args.ti[2]] * args.pi[2] TODO
     si = SurfaceInteraction3f()
+    d2r = ek.pi / 180
 
     # Specify an incident direction with 45 degrees elevation
-    si.wi = sph_dir(ek.pi * 45 / 180, 0.0)
+    '''
+    theta_i, phi_i = ek.meshgrid(
+        ek.linspace(Float, d2r*args.ti[0], d2r*args.ti[1], args.ti[2]),
+        ek.linspace(Float, d2r*args.pi[0], d2r*args.pi[1], args.pi[2])
+    )
+    si.wi = sph_dir(theta_i, phi_i)''' # TODO
+    si.wi = sph_dir(0, 0)
 
     # Create grid in spherical coordinates and map it onto the sphere
-    res = 300
-    theta_o, phi_o = ek.meshgrid(
-        ek.linspace(Float, 0,     ek.pi,     res),
-        ek.linspace(Float, 0, 2 * ek.pi, 2 * res)
+    theta_s, phi_s = ek.meshgrid(
+        ek.linspace(Float, d2r*args.ts[0], d2r*args.ts[1], args.ts[2]),
+        ek.linspace(Float, d2r*args.ps[0], d2r*args.ps[1], args.ps[2])
     )
-    wo = sph_dir(theta_o, phi_o)
+    ws = sph_dir(theta_s, phi_s)
 
     # Evaluate the whole array (18000 directions) at once
-    values = bsdf.eval(BSDFContext(), si, wo)
+    values = bsdf.eval(BSDFContext(), si, ws)
     return values
 
 def plot_bsdf(values, args):
-    res = 300
+    res = 128
     # Extract red channel of BRDF values and reshape into 2D grid
     values_r = np.array(values)[:, 0]
-    values_r = values_r.reshape(2 * res, res).T
+    values_r = values_r.reshape(res, res).T
 
     # Plot values for spherical coordinates
-    fig, ax = plt.subplots(figsize=(12, 7))
+    fig, ax = plt.subplots(figsize=(8, 8))
 
-    im = ax.imshow(values_r, extent=[0, 2 * np.pi, np.pi, 0],
+    im = ax.imshow(values_r, extent=[0, 2 * np.pi, 2 * np.pi, 0],
                 cmap='jet', interpolation='bicubic')
 
     ax.set_xlabel(r'$\phi_o$', size=14)
     ax.set_xticks([0, np.pi, 2 * np.pi])
     ax.set_xticklabels(['0', '$\\pi$', '$2\\pi$'])
     ax.set_ylabel(r'$\theta_o$', size=14)
-    ax.set_yticks([0, np.pi / 2, np.pi])
-    ax.set_yticklabels(['0', '$\\pi/2$', '$\\pi$'])
+    ax.set_yticks([0, np.pi, 2 * np.pi])
+    ax.set_yticklabels(['0', '$\\pi$', '$2\\pi$'])
 
     divider = make_axes_locatable(ax)
     cax = divider.append_axes("right", size="3%", pad=0.05)
     plt.colorbar(im, cax=cax)
 
-    fig.savefig("bsdf_eval.jpg", dpi=150, bbox_inches='tight', pad_inches=0)
+    #fig.savefig("bsdf_eval.jpg", dpi=150, bbox_inches='tight', pad_inches=0)
     plt.show()
 
 if __name__ == '__main__':
@@ -91,7 +95,7 @@ if __name__ == '__main__':
                         default=[0.0, 360.0, 128],
                         help='[ 0 ] Scattered angle')
     parser.add_argument('-d','--mode', dest='mode',
-                        action='store', type=int, default=0,
+                        action='store', type=int, default=3,
                         help=textwrap.dedent('''
                             [ 0 ] meshgrid(i, s)
                             [ 1 ] s =  i,       e.g. (i, s) = (30,  30)
@@ -130,5 +134,6 @@ if __name__ == '__main__':
     args = parser.parse_args()
     # make data
     values = get_bsdf(args)
+    print(np.array(values).shape)
     # show & write data
     plot_bsdf(values,args)
