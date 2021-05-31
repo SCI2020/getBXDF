@@ -2,7 +2,11 @@
 get BXDF in mitsuba2
 
 ## environment
+<<<<<<< HEAD
 [build mitsuba2 with variant "packet_rgb"](https://mitsuba2.readthedocs.io/en/latest/)
+=======
+[build mitsuba2 with variant "packet_rgb"](https://mitsuba2.readthedocs.io/en/latest/) \
+>>>>>>> 74eae1e1fa10784989b4b27fee5b46a48d8f0d59
 ### Linux
 add mitsuba and enoki to python import search path
 ```
