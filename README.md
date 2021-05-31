@@ -2,11 +2,21 @@
 get BXDF in mitsuba2
 
 ## environment
-[build mitsuba2 with variant "packet_rgb"](https://mitsuba2.readthedocs.io/en/latest/) \
+[build mitsuba2 with variant "packet_rgb"](https://mitsuba2.readthedocs.io/en/latest/)
+### Linux
 add mitsuba and enoki to python import search path
 ```
 export PYTHONPATH="<..mitsuba repository..>/build/dist/python:$PYTHONPATH"
 ```
+or edit and run
+```
+source setpypath.sh
+```
+### Windows
+add Environment Variable
+|Variable|Value|
+|:-:|:-:|
+|PYTHONPATH|C:\Users\YOUR-USERNAME\source\repos\mitsuba2\dist\python|
 
 ## arguments
 ```
