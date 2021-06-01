@@ -20,7 +20,7 @@ def sph_dir(theta, phi):
     sp, cp = ek.sincos(phi)
     return Vector3f(cp * st, sp * st, ct)
 
-def get_bsdf_s(args, theta_i, phi_i):
+def get_bxdf_s(args, theta_i, phi_i):
     # Load desired BSDF plugin
     bsdf = load_string(args.material)
 
@@ -44,16 +44,23 @@ def get_bsdf_s(args, theta_i, phi_i):
     values_r = values_r.reshape(args.ts[2], args.ps[2]).T
     return values_r
 
-def get_bsdf_i(args): # parallel get_bsdf_s
+def get_bxdf_i(args): # parallel get_bxdf_s
     ret = np.zeros((args.ti[2], args.pi[2], args.ts[2], args.ps[2]),
                     dtype=float)
-    pass
+    d2r = ek.pi / 180
+    theta_i, phi_i = ek.meshgrid(
+        ek.linspace(Float, d2r*args.ti[0], d2r*args.ti[1], args.ti[2]),
+        ek.linspace(Float, d2r*args.pi[0], d2r*args.pi[1], args.pi[2])
+    )
+    for i in range(args.ti[2]):
+        for j in range(args.pi[2]):
+            k = get_bxdf_s(args, theta_i[i], phi_i[j])
+            ret[i, j, :, :] = k
+    return ret
 
-def plot_bsdf(args, values):
-    res = 128
+def put_bxdf(args, values):
     # Extract red channel of BRDF values and reshape into 2D grid
-    values_r = np.array(values)[:, 0]
-    values_r = values_r.reshape(res, res).T
+    values_r = values[0,0,:,:]
 
     # Plot values for spherical coordinates
     fig, ax = plt.subplots(figsize=(8, 8))
@@ -84,7 +91,7 @@ if __name__ == '__main__':
                         help='overwrite by following args')
     parser.add_argument('-a','--material', dest='material',
                         action='store', type=str,
-                        default="<bsdf version='2.0.0' type='roughconductor'><float name='alpha' value='0.2'/><string name='distribution' value='ggx'/></bsdf>",
+                        default="<bsdf version='2.2.1' type='roughconductor'><float name='alpha' value='0.2'/><string name='distribution' value='ggx'/></bsdf>",
                         help='<bsdf ...>...<bsdf/>')
     parser.add_argument('-i','--incident-angle', dest='i',
                         action='store', nargs=3,
@@ -133,7 +140,7 @@ if __name__ == '__main__':
                         default=False, help='Show plot')
     args = parser.parse_args()
     # make data
-    values = get_bsdf_s(args, 0, 0)
-    print(np.array(values).shape)
+    values = get_bxdf_i(args)
+    print(values.shape)
     # show & write data
-    #plot_bsdf(values,args)
+    put_bxdf(args, values)
